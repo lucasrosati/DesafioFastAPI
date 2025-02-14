@@ -3,7 +3,6 @@ from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()
 
-# Modelo Empresa
 class Empresa(Base):
     __tablename__ = "empresas"
     id = Column(Integer, primary_key=True, index=True)
@@ -13,7 +12,6 @@ class Empresa(Base):
     email = Column(String, nullable=False)
     telefone = Column(String, nullable=False)
 
-# Modelo Obrigação Acessória
 class ObrigacaoAcessoria(Base):
     __tablename__ = "obrigacoes_acessorias"
     id = Column(Integer, primary_key=True, index=True)

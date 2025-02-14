@@ -4,12 +4,11 @@ from main import app
 client = TestClient(app)
 
 def test_create_obrigacao():
-    # Criar uma empresa válida antes de criar a obrigação
     response_create_empresa = client.post(
         "/empresas/",
         json={
             "nome": "Empresa para Obrigação",
-            "cnpj": "23456789000111",  # CNPJ diferente
+            "cnpj": "23456789000111",  
             "endereco": "Rua Obrigação, 456",
             "email": "obrigacao@empresa.com",
             "telefone": "11988887766",
@@ -17,19 +16,17 @@ def test_create_obrigacao():
     )
     assert response_create_empresa.status_code == 200, response_create_empresa.json()
 
-    # Criar uma obrigação para a empresa recém-criada
     empresa_id = response_create_empresa.json()["id"]
     response_create_obrigacao = client.post(
         "/obrigacoes/",
         json={
             "nome": "Obrigação Teste",
             "periodicidade": "mensal",
-            "empresa_id": empresa_id,  # Associar à empresa criada
+            "empresa_id": empresa_id,  
         },
     )
     assert response_create_obrigacao.status_code == 200, response_create_obrigacao.json()
 
-    # Validar os dados retornados
     obrigacao = response_create_obrigacao.json()
     assert obrigacao["nome"] == "Obrigação Teste"
     assert obrigacao["periodicidade"] == "mensal"

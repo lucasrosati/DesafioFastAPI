@@ -5,7 +5,6 @@ client = TestClient(app)
 
 
 def test_read_empresa(client):
-    # Cria uma empresa antes de testar leitura
     response_create = client.post(
         "/empresas/",
         json={
@@ -18,15 +17,12 @@ def test_read_empresa(client):
     )
     assert response_create.status_code == 200, response_create.json()
 
-    # Extrai o ID da empresa criada
     created_data = response_create.json()
     empresa_id = created_data["id"]
 
-    # Realiza a leitura da empresa
     response_read = client.get(f"/empresas/{empresa_id}")
     assert response_read.status_code == 200, response_read.json()
 
-    # Valida os dados retornados
     data = response_read.json()
     assert data["nome"] == "Empresa Teste"
     assert data["cnpj"] == "98765432000199"

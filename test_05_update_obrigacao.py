@@ -4,10 +4,8 @@ from main import app
 client = TestClient(app)
 
 def test_update_obrigacao(client):
-    # Verifica se a obrigação já existe
     response_check = client.get("/obrigacoes/1")
     if response_check.status_code == 404:
-        # Cria a obrigação apenas se não existir
         client.post(
             "/obrigacoes/",
             json={
@@ -17,7 +15,6 @@ def test_update_obrigacao(client):
             },
         )
 
-    # Atualiza a obrigação existente
     response_update = client.put(
         "/obrigacoes/1",
         json={
@@ -28,7 +25,6 @@ def test_update_obrigacao(client):
     )
     assert response_update.status_code == 200, response_update.json()
 
-    # Valida os dados atualizados
     data = response_update.json()
     assert data["nome"] == "Obrigação Atualizada"
     assert data["periodicidade"] == "anual"

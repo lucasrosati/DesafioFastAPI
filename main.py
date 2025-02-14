@@ -4,17 +4,14 @@ from database import SessionLocal, init_db
 import models
 import schemas
 
-# Inicializa a aplicação FastAPI
 app = FastAPI(
     title="API de Gestão de Empresas e Obrigações Acessórias",
     description="API para gerenciar empresas e obrigações fiscais, incluindo criação, leitura, atualização e exclusão de dados.",
     version="1.0.0",
 )
 
-# Inicializa o banco de dados
 init_db()
 
-# Dependência para obter a sessão do banco de dados
 def get_db():
     db = SessionLocal()
     try:
@@ -22,7 +19,6 @@ def get_db():
     finally:
         db.close()
 
-# Rota para criar uma empresa
 @app.post("/empresas/", response_model=schemas.Empresa, tags=["Empresas"])
 def create_empresa(
     empresa: schemas.EmpresaCreate = Body(
@@ -50,7 +46,6 @@ def create_empresa(
     db.refresh(new_empresa)
     return new_empresa
 
-# Rota para obter uma empresa por ID
 @app.get("/empresas/{empresa_id}", response_model=schemas.Empresa, tags=["Empresas"])
 def read_empresa(empresa_id: int, db: Session = Depends(get_db)):
     db_empresa = db.query(models.Empresa).filter(models.Empresa.id == empresa_id).first()
@@ -58,7 +53,6 @@ def read_empresa(empresa_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Empresa não encontrada.")
     return db_empresa
 
-# Rota para atualizar uma empresa
 @app.put("/empresas/{empresa_id}", response_model=schemas.Empresa, tags=["Empresas"])
 def update_empresa(
     empresa_id: int,
@@ -87,7 +81,6 @@ def update_empresa(
     db.refresh(db_empresa)
     return db_empresa
 
-# Rota para deletar uma empresa
 @app.delete("/empresas/{empresa_id}", tags=["Empresas"])
 def delete_empresa(empresa_id: int, db: Session = Depends(get_db)):
     db_empresa = db.query(models.Empresa).filter(models.Empresa.id == empresa_id).first()
@@ -97,7 +90,6 @@ def delete_empresa(empresa_id: int, db: Session = Depends(get_db)):
     db.commit()
     return {"message": "Empresa deletada com sucesso"}
 
-# Rota para criar uma obrigação acessória
 @app.post("/obrigacoes/", response_model=schemas.ObrigacaoAcessoria, tags=["Obrigações Acessórias"])
 def create_obrigacao(
     obrigacao: schemas.ObrigacaoAcessoriaCreate = Body(
@@ -123,7 +115,6 @@ def create_obrigacao(
     db.refresh(new_obrigacao)
     return new_obrigacao
 
-# Rota para obter uma obrigação por ID
 @app.get("/obrigacoes/{obrigacao_id}", response_model=schemas.ObrigacaoAcessoria, tags=["Obrigações Acessórias"])
 def read_obrigacao(obrigacao_id: int, db: Session = Depends(get_db)):
     db_obrigacao = db.query(models.ObrigacaoAcessoria).filter(models.ObrigacaoAcessoria.id == obrigacao_id).first()
@@ -131,7 +122,6 @@ def read_obrigacao(obrigacao_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Obrigação não encontrada.")
     return db_obrigacao
 
-# Rota para atualizar uma obrigação acessória
 @app.put("/obrigacoes/{obrigacao_id}", response_model=schemas.ObrigacaoAcessoria, tags=["Obrigações Acessórias"])
 def update_obrigacao(
     obrigacao_id: int,
@@ -158,7 +148,6 @@ def update_obrigacao(
     db.refresh(db_obrigacao)
     return db_obrigacao
 
-# Rota para deletar uma obrigação acessória
 @app.delete("/obrigacoes/{obrigacao_id}", tags=["Obrigações Acessórias"])
 def delete_obrigacao(obrigacao_id: int, db: Session = Depends(get_db)):
     db_obrigacao = db.query(models.ObrigacaoAcessoria).filter(models.ObrigacaoAcessoria.id == obrigacao_id).first()

@@ -14,7 +14,7 @@ def test_create_empresa():
             "telefone": "11999999999",
         },
     )
-    assert response.status_code == 200  # Sucesso
+    assert response.status_code == 200  
     data = response.json()
     assert data["nome"] == "Empresa Teste"
     assert data["cnpj"] == "12345678000199"
