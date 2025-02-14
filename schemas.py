@@ -1,10 +1,11 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, EmailStr
 
+# Base para os schemas
 class EmpresaBase(BaseModel):
     nome: str
     cnpj: str
     endereco: str
-    email: str
+    email: EmailStr
     telefone: str
 
 class EmpresaCreate(EmpresaBase):
@@ -12,13 +13,11 @@ class EmpresaCreate(EmpresaBase):
 
 class Empresa(EmpresaBase):
     id: int
-
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)  # Substitui a configuração 'Config'
 
 class ObrigacaoAcessoriaBase(BaseModel):
     nome: str
-    periodicidade: str
+    periodicidade: str  # Exemplo: "mensal", "trimestral", "anual"
     empresa_id: int
 
 class ObrigacaoAcessoriaCreate(ObrigacaoAcessoriaBase):
@@ -26,6 +25,4 @@ class ObrigacaoAcessoriaCreate(ObrigacaoAcessoriaBase):
 
 class ObrigacaoAcessoria(ObrigacaoAcessoriaBase):
     id: int
-
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)  # Substitui a configuração 'Config'

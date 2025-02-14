@@ -24,7 +24,7 @@ def create_empresa(empresa: schemas.EmpresaCreate, db: Session = Depends(get_db)
     db_empresa = db.query(models.Empresa).filter(models.Empresa.cnpj == empresa.cnpj).first()
     if db_empresa:
         raise HTTPException(status_code=400, detail="Empresa com esse CNPJ já existe.")
-    new_empresa = models.Empresa(**empresa.dict())
+    new_empresa = models.Empresa(**empresa.model_dump())  # Atualizado para model_dump()
     db.add(new_empresa)
     db.commit()
     db.refresh(new_empresa)
@@ -44,7 +44,7 @@ def update_empresa(empresa_id: int, empresa: schemas.EmpresaCreate, db: Session 
     db_empresa = db.query(models.Empresa).filter(models.Empresa.id == empresa_id).first()
     if not db_empresa:
         raise HTTPException(status_code=404, detail="Empresa não encontrada.")
-    for key, value in empresa.dict().items():
+    for key, value in empresa.model_dump().items():  # Atualizado para model_dump()
         setattr(db_empresa, key, value)
     db.commit()
     db.refresh(db_empresa)
@@ -64,7 +64,7 @@ def delete_empresa(empresa_id: int, db: Session = Depends(get_db)):
 
 @app.post("/obrigacoes/", response_model=schemas.ObrigacaoAcessoria)
 def create_obrigacao(obrigacao: schemas.ObrigacaoAcessoriaCreate, db: Session = Depends(get_db)):
-    new_obrigacao = models.ObrigacaoAcessoria(**obrigacao.dict())
+    new_obrigacao = models.ObrigacaoAcessoria(**obrigacao.model_dump())  # Atualizado para model_dump()
     db.add(new_obrigacao)
     db.commit()
     db.refresh(new_obrigacao)
@@ -84,7 +84,7 @@ def update_obrigacao(obrigacao_id: int, obrigacao: schemas.ObrigacaoAcessoriaCre
     db_obrigacao = db.query(models.ObrigacaoAcessoria).filter(models.ObrigacaoAcessoria.id == obrigacao_id).first()
     if not db_obrigacao:
         raise HTTPException(status_code=404, detail="Obrigação não encontrada.")
-    for key, value in obrigacao.dict().items():
+    for key, value in obrigacao.model_dump().items():  # Atualizado para model_dump()
         setattr(db_obrigacao, key, value)
     db.commit()
     db.refresh(db_obrigacao)
