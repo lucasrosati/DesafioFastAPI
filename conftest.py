@@ -31,12 +31,14 @@ def reset_database():
     Reseta o banco de dados ao final de todos os testes.
     Remove todos os dados das tabelas e reinicia os IDs.
     """
-    # Confirma que o banco está conectado antes dos testes
-    with engine.connect() as connection:
-        connection.execute(text("SELECT 1;"))
-
-    yield  # Aguarda todos os testes terminarem
+    yield  # Espera todos os testes terminarem
 
     # Executa os comandos de limpeza após os testes
     with engine.connect() as connection:
-        connection.execute(text("TRUNCATE TABLE obrigacoes_acessorias, empresas RESTART IDENTITY CASCADE;"))
+        # Remove os dados de forma segura sem precisar desativar chaves estrangeiras
+        connection.execute(text("DELETE FROM obrigacoes_acessorias;"))
+        connection.execute(text("DELETE FROM empresas;"))
+        # Reinicia os IDs das tabelas
+        connection.execute(text("ALTER SEQUENCE obrigacoes_acessorias_id_seq RESTART WITH 1;"))
+        connection.execute(text("ALTER SEQUENCE empresas_id_seq RESTART WITH 1;"))
+        connection.commit()
